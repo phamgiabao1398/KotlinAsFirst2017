@@ -3,6 +3,7 @@ package lesson2.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import java.lang.Math.abs
 
 
 /**
@@ -74,11 +75,19 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-       if (kingX != rookX1 && kingY != rookY1 && kingX != rookX2 && kingY != rookY2) return 0
-       if (kingX == rookX1 || kingY == rookY1 && kingX != rookX2 && kingY != rookY2) return 1
-       if (kingX != rookX1 && kingY != rookY1 && kingX == rookX2 || kingY == rookY2) return 2
-       else return 3
+    if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 == kingX) || (rookY2 == kingY))) return 3 else {
+        if ((rookX1 == kingX) || (rookY1 == kingY)) {
+            return 1
+        } else {
+            if ((rookX2 == kingX) || (rookY2 == kingY)) {
+                return 2
+            } else {
+                return 0
+            }
+        }
+    }
 }
+
 
 /**
  * Простая
@@ -93,10 +102,10 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    if (kingX != rookX && kingY != rookY && kingX - kingY != bishopX - bishopY && kingX + kingY != bishopX + bishopY) return 0
-    if (kingX == rookX || kingY == rookY && kingX - kingY != bishopX - bishopY && kingX + kingY != bishopX + bishopY) return 1
-    if (kingX != rookX && kingY != rookY && kingX - kingY == bishopX - bishopY || kingX + kingY == bishopX + bishopY) return 2
-    else return 3
+   if (((rookX == kingX) || (rookY == kingY)) && (abs(bishopX - kingX) == abs(bishopY - kingY))) return 3 else {
+       if ((rookX == kingX) || (rookY == kingY)) return 1
+       if (abs(bishopX - kingX) == abs(bishopY - kingY)) return 2 else return 0
+   }
 }
 /**
  * Простая
@@ -125,11 +134,23 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
+fun m(a: Int, b: Int, c: Int, d: Int): Int{
+    var max=a
+    var min=a
+    if (max<b) {max=b}
+    if (min>b) {min=b}
+    if (max<c) {max=c}
+    if (min>c) {min=c}
+    if (max<d) {max=d}
+    if (min>c) {min=d}
+    return max-min
+}
+
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if ((b < d && b ==c) || (b > d && a == d) || (a == b || c == d) || (a == c && b == d)) return 0
-    if (c in a..b && d in a..b) return d - c
-    if (c in a..b && d > b) return b - c
-    if (a in c..d && b > d) return d - a
-    if (a in c..d && d > b) return b - a
-    else return -1
+    val f = m(a, b, c, d)
+    if ((d - c + b - a) >= f) {
+        return (d - c + b - a - f)
+    } else {
+        return -1
+    }
 }
