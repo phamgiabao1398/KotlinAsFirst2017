@@ -347,7 +347,7 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var number = n
-    val map1 = mapOf(4 to "IV", 1 to "I", 5 to "V", 9 to "IX", 10 to "X", 40 to "XL", 50 to "L", 90 to "XC", 100 to "C", 400 to "CD", 500 to "D", 900 to "CM", 1000 to "M")
+    val map1 = mapOf(1 to "I", 4 to "IV", 5 to "V", 9 to "IX", 10 to "X", 40 to "XL", 50 to "L", 90 to "XC", 100 to "C", 400 to "CD", 500 to "D", 900 to "CM", 1000 to "M")
     val result = StringBuilder()
     while (number > 0) {
         val parse = map1.keys.findLast {it <= number}
@@ -368,7 +368,7 @@ fun roman(n: Int): String {
  */
 fun russian(n: Int): String {
     val listUnits = listOf("", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-    val listTens = listOf("", "десять", "двадцать", "тридцать", "сорок", "пятдесять", "шестдесять", "семдесять", "восемдесять", "девяносто")
+    val listTens = listOf("", "десять", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
     val listFromTenToTwenty = listOf("", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
     val listHundreds = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот" , "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val listResult = mutableListOf<String>()
@@ -401,5 +401,5 @@ fun russian(n: Int): String {
         listResult.add(listTens[n / 10 % 10])
         listResult.add(unit)
     }
-    return listResult.filter { it != "" }.joinToString(" " )
+    return listResult.filter { it != "" }.joinToString( " ")
 }
