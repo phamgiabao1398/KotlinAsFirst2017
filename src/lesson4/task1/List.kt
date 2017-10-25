@@ -370,7 +370,7 @@ fun russian(n: Int): String {
     val listUnits = listOf("", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val listTens = listOf("", "десять", "двадцать", "тридцать", "сорок", "пятдесять", "шестдесять", "семдесять", "восемдесять", "девяносто")
     val listFromTenToTwenty = listOf("", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
-    val listHundreds = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val listHundreds = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот" , "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val listResult = mutableListOf<String>()
     val lastDigit = n % 10
     val thousand = when (n / 1000 % 10) {
@@ -401,5 +401,5 @@ fun russian(n: Int): String {
         listResult.add(listTens[n / 10 % 10])
         listResult.add(unit)
     }
-    return listResult.filter {it != ""}.joinToString("")
+    return listResult.filter { it != "" }.joinToString(" " )
 }
