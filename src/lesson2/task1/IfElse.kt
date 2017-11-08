@@ -58,9 +58,11 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val S2 = t2 * v2
     val S3 = t3 * v3
     val S = (S1 + S2 + S3) / 2
-    if (S <= S1) return S / v1
-    if ((S > S1) && (S <= S1 + S2)) return (S - S1) / v2 + t1
-    else return (S - S1 - S2) / v3 + t1 + t2
+    return if (S <= S1)
+               S / v1
+           else if ((S > S1) && (S <= S1 + S2))
+                   (S - S1) / v2 + t1
+           else  (S - S1 - S2) / v3 + t1 + t2
 }
 
 /**
@@ -75,18 +77,15 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 == kingX) || (rookY2 == kingY))) return 3 else {
-        if ((rookX1 == kingX) || (rookY1 == kingY)) {
-            return 1
-        } else {
-            if ((rookX2 == kingX) || (rookY2 == kingY)) {
-                return 2
-            } else {
-                return 0
-            }
-        }
-    }
+    return if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 == kingX) || (rookY2 == kingY)))  3
+           else if ((rookX1 == kingX) || (rookY1 == kingY))
+             1
+           else if ((rookX2 == kingX) || (rookY2 == kingY))
+             2
+           else
+             0
 }
+
 
 
 /**
@@ -102,11 +101,16 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-   if (((rookX == kingX) || (rookY == kingY)) && (abs(bishopX - kingX) == abs(bishopY - kingY))) return 3 else {
-       if ((rookX == kingX) || (rookY == kingY)) return 1
-       if (abs(bishopX - kingX) == abs(bishopY - kingY)) return 2 else return 0
+  return if (((rookX == kingX) || (rookY == kingY)) && (abs(bishopX - kingX) == abs(bishopY - kingY)))
+            3
+         else if ((rookX == kingX) || (rookY == kingY))
+            1
+         else if (abs(bishopX - kingX) == abs(bishopY - kingY))
+            2
+         else
+            0
    }
-}
+
 /**
  * Простая
  *
@@ -119,11 +123,14 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val x1 = (sqr(a) - sqr(b) -sqr(c)) / (-2 * b * c)
     val x2 = (sqr(b) - sqr(a) -sqr(c)) / (-2 * a * c)
     val x3 = (sqr(c) - sqr(a) -sqr(b)) / (-2 * a * b)
-    if (a + b < c || b + c < a || c + a < b) return -1
+    return if (a + b < c || b + c < a || c + a < b)
+        -1
+    else if (x1 < 0 || x2 < 0 || x3 < 0)
+        2
+    else if (x1 == 0.0 || x2 == 0.0 || x3 == 0.0)
+        1
     else
-         if (x1 < 0 || x2 < 0 || x3 < 0) return 2
-         else if (x1 == 0.0 || x2 == 0.0 || x3 == 0.0) return 1
-         else return 0
+        0
 }
 
 /**
@@ -134,7 +141,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun m(a: Int, b: Int, c: Int, d: Int): Int{
+fun segment(a: Int, b: Int, c: Int, d: Int): Int{
     var max=a
     var min=a
     if (max<b) {max=b}
@@ -147,7 +154,7 @@ fun m(a: Int, b: Int, c: Int, d: Int): Int{
 }
 
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    val f = m(a, b, c, d)
+    val f = segment(a, b, c, d)
     if ((d - c + b - a) >= f) {
         return (d - c + b - a - f)
     } else {

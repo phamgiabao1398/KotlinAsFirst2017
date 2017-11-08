@@ -65,8 +65,8 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var count = 1
     var number = n
-    while (number > 0 || number < 0)  {
-        if (number / 10 > 0 || number / 10 < 0) {
+    while (number != 0)  {
+        if (number / 10 != 0) {
             count++
         }
         number /= 10
@@ -84,16 +84,14 @@ fun fib(n: Int): Int {
     var a = 1
     var b = 1
     var result = 1
-        if((n == 1) || (n == 2)) return 1
-        else {
-            for ( i in 1..n-2) {
+    for ( i in 1..n-2) {
                 result = a + b
                 a = b
                 b = result
             }
             return result
         }
-}
+
 
 /**
  * Простая
@@ -103,9 +101,8 @@ fun fib(n: Int): Int {
  */
 fun lcm(m: Int, n: Int): Int {
     var uscln = 1
-    var min = if(m > n) m else n
-    for (i in min downTo 1)
-    {
+    val min = if(m > n) m else n
+    for (i in min downTo 1) {
         if(m % i == 0 && n % i == 0){
             uscln = i
             break
@@ -151,10 +148,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     val min = if(m > n) m else n
 
     for (a in min downTo 2) {
-        if (m % a == 0 && n % a ==0)
-            return false
+         if (m % a == 0 && n % a ==0)
+              return false
     }
-            return true
+              return true
 
 }
 
@@ -288,7 +285,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 
-fun quantity(n: Int): Int {
+fun digit(n: Int): Int {
     var r: Int = 0
     var nn: Int = n
     while (nn > 0) {
@@ -304,7 +301,7 @@ fun squareSequenceDigit(n: Int): Int {
     var result = 0
     while (number < n) {
            i++
-           number = number + quantity(i * i)
+           number = number + digit(i * i)
          }
        result = i * i
        for (i in n..number - 1) {
@@ -326,7 +323,7 @@ fun fibSequenceDigit(n: Int): Int {
     var result = 0
         while (number < n) {
                i++
-               number = number + quantity(fib(i))
+               number = number + digit(fib(i))
         }
         result = fib(i)
         for (i in n..number - 1) {
