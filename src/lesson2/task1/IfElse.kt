@@ -59,10 +59,11 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val S3 = t3 * v3
     val S = (S1 + S2 + S3) / 2
     return if (S <= S1)
-               S / v1
+              S / v1
            else if ((S > S1) && (S <= S1 + S2))
-                   (S - S1) / v2 + t1
-           else  (S - S1 - S2) / v3 + t1 + t2
+             (S - S1) / v2 + t1
+           else
+             (S - S1 - S2) / v3 + t1 + t2
 }
 
 /**
@@ -77,7 +78,8 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    return if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 == kingX) || (rookY2 == kingY)))  3
+    return if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 == kingX) || (rookY2 == kingY)))
+             3
            else if ((rookX1 == kingX) || (rookY1 == kingY))
              1
            else if ((rookX2 == kingX) || (rookY2 == kingY))
@@ -124,13 +126,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val x2 = (sqr(b) - sqr(a) -sqr(c)) / (-2 * a * c)
     val x3 = (sqr(c) - sqr(a) -sqr(b)) / (-2 * a * b)
     return if (a + b < c || b + c < a || c + a < b)
-        -1
-    else if (x1 < 0 || x2 < 0 || x3 < 0)
-        2
-    else if (x1 == 0.0 || x2 == 0.0 || x3 == 0.0)
-        1
-    else
-        0
+               -1
+           else if (x1 < 0 || x2 < 0 || x3 < 0)
+                2
+           else if (x1 == 0.0 || x2 == 0.0 || x3 == 0.0)
+                1
+           else
+                0
 }
 
 /**
