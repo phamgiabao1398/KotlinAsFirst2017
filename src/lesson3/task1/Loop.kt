@@ -85,12 +85,12 @@ fun fib(n: Int): Int {
     var b = 1
     var result = 1
     for ( i in 1..n-2) {
-                result = a + b
-                a = b
-                b = result
-            }
-            return result
-        }
+        result = a + b
+        a = b
+        b = result
+    }
+    return result
+}
 
 
 /**
@@ -99,16 +99,19 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var uscln = 1
-    val min = if(m > n) m else n
-    for (i in min downTo 1) {
-        if(m % i == 0 && n % i == 0){
-            uscln = i
-            break
-        }
+
+fun lcm(m: Int, n: Int): Int = m / gcd(m,n) * n
+
+fun gcd(m: Int, n: Int): Int {
+    var a = m
+    var b = n
+    while (a != b) {
+    if (a > b)
+        a -= b
+    else
+        b -= a
     }
-    return m * n / uscln
+    return a
 }
 
 /**
@@ -117,11 +120,11 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var del = 2
-    while (n % del != 0) {
-        del += 1
+    var i = 2
+    while (n % i != 0) {
+        i++
     }
-    return del
+    return i
 }
 
 /**
@@ -130,11 +133,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var m = n / 2
-    while (n % m != 0) {
-        m -= 1
+    var i = n - 1
+    while (n % i != 0) {
+        i--
     }
-    return m
+    return i
 }
 
 /**
@@ -144,16 +147,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val min = if(m > n) m else n
-
-    for (a in min downTo 2) {
-         if (m % a == 0 && n % a ==0)
-              return false
-    }
-              return true
-
-}
+fun isCoPrime(m: Int, n: Int): Boolean  =  gcd (m, n) == 1
 
 /**
  * Простая
@@ -267,16 +261,17 @@ fun isPalindrome(n: Int): Boolean {
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    val x = n % 10
-    var number = n
-    var result = false
-    do {
-        if (x != number % 10) result = true
-        number /= 10
-    } while (number != 0)
-    return result
+    val  number  = n %  10
+    var  s  = n
+    while (s >  0 ) {
+        if (s % 10  != number) {
+            return true
+        } else {
+            s /=  10
+        }
+    }
+         return  false
 }
-
 /**
  * Сложная
  *
