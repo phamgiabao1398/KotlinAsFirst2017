@@ -127,6 +127,9 @@ fun minDivisor(n: Int): Int {
     return i
 }
 
+
+
+
 /**
  * Простая
  *
@@ -261,16 +264,16 @@ fun isPalindrome(n: Int): Boolean {
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    val  number  = n %  10
-    var  s  = n
-    while (s >  0 ) {
-        if (s % 10  != number) {
+    val number = n % 10
+    var s = n
+    while (s > 0) {
+        if (s % 10 != number) {
             return true
         } else {
-            s /=  10
+            s /= 10
         }
     }
-         return  false
+    return false
 }
 /**
  * Сложная
@@ -280,14 +283,14 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 
-fun digit(n: Int): Int {
-    var r: Int = 0
-    var nn: Int = n
-    while (nn > 0) {
-        nn = nn / 10
-        r++
+fun count(n: Int): Int {
+    var k = 0
+    var s = n
+    while (s > 0) {
+        s = s / 10
+        k++
     }
-    return r
+    return k
 }
 
 fun squareSequenceDigit(n: Int): Int {
@@ -295,13 +298,13 @@ fun squareSequenceDigit(n: Int): Int {
     var number = 0
     var result = 0
     while (number < n) {
-           i++
-           number = number + digit(i * i)
-         }
-       result = i * i
-       for (i in n..number - 1) {
-           result = result / 10
-         }
+        i++
+        number = number + count(i * i)
+    }
+    result = i * i
+    for (i in n..number - 1) {
+        result = result / 10
+    }
     return (result % 10)
 }
 
@@ -316,13 +319,13 @@ fun fibSequenceDigit(n: Int): Int {
     var i = 0
     var number = 0
     var result = 0
-        while (number < n) {
-               i++
-               number = number + digit(fib(i))
-        }
-        result = fib(i)
-        for (i in n..number - 1) {
-               result = result / 10
-        }
+    while (number < n) {
+        i++
+        number = number + count(fib(i))
+    }
+    result = fib(i)
+    for (i in n..number - 1) {
+        result = result / 10
+    }
     return (result % 10)
 }
