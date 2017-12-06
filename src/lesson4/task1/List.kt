@@ -124,12 +124,12 @@ fun abs(v: List<Double>): Double {
  */
 fun mean(list: List<Double>): Double {
     var sum: Double = 0.0
-    for (i in 0 .. list.size-1){
+    for (i in 0..list.size - 1) {
         sum += list[i]
     }
-    if (list.size == 0){
-        return 0.0}
-    else{
+    if (list.size == 0) {
+        return 0.0
+    } else {
         return sum / list.size
     }
 }
@@ -201,13 +201,10 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    if (list.size > 1) {
-        for (i in 1 .. list.size - 1) {
-            list[i] = list[i] + list[i - 1]
-        }
-        return list
+    for (i in 1..list.size - 1) {
+        list[i] = list[i] + list[i - 1]
     }
-    else return list
+    return list
 }
 
 
@@ -234,31 +231,21 @@ fun factorize(n: Int): List<Int> {
 }
 
 /**
- * Сложная
+ * Слvar t = 2
+var n1 = n
+val x = mutableListOf<Int>()
+while (t <= n1) {
+if (n1 % t == 0) {
+x.add(t)
+n1 /= t
+t--
+}
+t++ожная
  *
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String {
-    var t = 2
-    var n1 = n
-    val x = mutableListOf<Int>()
-    while (t <= n1) {
-        if (n1 % t == 0) {
-            x.add(t)
-            n1 /= t
-            t--
-        }
-        t++
-    }
-    var m = ""
-    m += x[0]
-    for (i in 1 .. x.size - 1) {
-        m += "*"
-        m += x[i]
-    }
-    return m
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -347,11 +334,12 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var number = n
-    val map1 = mapOf(1 to "I", 4 to "IV", 5 to "V", 9 to "IX", 10 to "X", 40 to "XL", 50 to "L", 90 to "XC", 100 to "C", 400 to "CD", 500 to "D", 900 to "CM", 1000 to "M")
+    val map1 = mapOf(1 to "I", 4 to "IV", 5 to "V", 9 to "IX", 10 to "X", 40 to "XL", 50 to "L", 90 to "XC",
+            100 to "C", 400 to "CD", 500 to "D", 900 to "CM", 1000 to "M")
     val result = StringBuilder()
     while (number > 0) {
-        val parse = map1.keys.findLast {it <= number}
-        if (parse != null) parse.toInt()
+        val parse = map1.keys.findLast { it <= number }
+        if (parse != null)
         else continue
         number -= parse
         result.append(map1[parse])
