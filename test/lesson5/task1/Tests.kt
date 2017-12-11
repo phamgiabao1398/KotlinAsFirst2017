@@ -130,13 +130,7 @@ class Tests {
         assertEquals(listOf(0, 6, 5, 4, 3, 2, 1, 0, -1, -1, -2),
                 computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 256))
     }
-    @Test
-    fun spammers() {
-        assertEquals( listOf("Masya"), spammers("Nagibator1992 10:05\n" +
-                "Alesha 9:56\n" +
-                "Masya 11:44\n" +
-                "Masya 11:45\n"))
-    }
+
 }
 
 
