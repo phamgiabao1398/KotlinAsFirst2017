@@ -66,35 +66,25 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
+val months = listOf<String>("января", "февраля", "марта", "апреля", "мая", "июня",
+        "июля", "августа", "сентября", "октября", "ноября", "декабря")
+
 fun dateStrToDigit(str: String): String {
-    var day = 0
-    val month: Int
-    val a = str.split(" ")
-    if (a.size != 3) return ""
-    try {
-        if (a[0].toInt() in 1..31) day += a[0].toInt()
-        else return ""
-        when (a[1]) {
-            "января" -> month = 1
-            "февраля" -> month = 2
-            "марта" -> month = 3
-            "апреля" -> month = 4
-            "мая" -> month = 5
-            "июня" -> month = 6
-            "июля" -> month = 7
-            "августа" -> month = 8
-            "сентября" -> month = 9
-            "октября" -> month = 10
-            "ноября" -> month = 11
-            "декабря" -> month = 12
-            else -> return ""
+    val parts = str.split(" ")
+    if (parts.size != 3) return ""
+    else {
+        try {
+            val day = parts[0].toInt()
+            val year = parts[2].toInt()
+            val month = months.indexOf(parts[1]) + 1
+            if (month == 0) return ""
+            return String.format("%02d.%02d.%d", day, month, year)
+        } catch (e: NumberFormatException) {
+            return ""
         }
-    } catch (e: NumberFormatException) {
-        return ""
     }
-    val year = a[2].toInt()
-    return String.format("%02d.%02d.%d", day, month, year)
 }
+
 
 /**
  * Средняя
@@ -104,37 +94,19 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    var builderString = ""
     val parts = digital.split(".")
-    if (parts.size == 3) {
+    if (parts.size != 3) return ""
+    else {
         try {
             val day = parts[0].toInt()
-            if (day !in 1..31)
-                return ""
-            else {
-                builderString = day.toString()
-                builderString += when (parts[1]) {
-                    "01" -> " января "
-                    "02" -> " февраля "
-                    "03" -> " марта "
-                    "04" -> " апреля "
-                    "05" -> " мая "
-                    "06" -> " июня "
-                    "07" -> " июля "
-                    "08" -> " августа "
-                    "09" -> " сентября "
-                    "10" -> " октября "
-                    "11" -> " ноября "
-                    "12" -> " декабря "
-                    else -> return ""
-                }
-            }
-            builderString += parts[2].toString()
+            val monthNumber = parts[1].toInt()
+            if (monthNumber !in 1..12) return ""
+            val month = months[monthNumber - 1]
+            return String.format("%d %s %s", day, month, parts[2])
         } catch (e: NumberFormatException) {
             return ""
         }
-        return builderString
-    } else return ""
+    }
 }
 
 /**
@@ -396,4 +368,56 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+
+fun computeDeviceCells (cells:Int, commands: String ,limit:Int) : List<Int> = TODO()
+
+fun spammers(text: String): List<String> {
+    val listMess = mutableListOf<Pair<String, Int>>();
+    for (line in text.lines()) {
+        val nameAndTime = line.split("", limit=2)
+        if (nameAndTime.size != 2) return listOf()
+
+        val name = nameAndTime[0]
+        val time = nameAndTime[1]
+
+        if (name.length == 0 || time.length == 0) return listOf()
+
+        val hrAndMn = time.split(":")
+        if (hrAndMn.size != 2) return listOf()
+
+        val hr = try {
+            hrAndMn[0].toInt()
+        } catch (e: Throwable) {
+            return listOf()
+        }
+
+
+        val mn = try {
+            hrAndMn[1].toInt()
+        } catch (e: Throwable) {
+            return listOf()
+        }
+
+        if (hr !in 0..23 || mn !in 0..59) return listOf()
+
+        listMess.add(Pair(name, hr * 60 + mn));
+
+    }
+    val users = listMess.map{it.first}.distinct();
+    val spammers = mutableListOf<String>()
+
+    for (user in users) {
+        val time = listMess.filter { it.first == user}.map{
+            it.second}.sorted();
+        for (i in 0 until time.size - 1) {
+            if (time[i + 1] - time[i] < 2) {
+                spammers.add(user)
+                break
+            }
+        }
+    }
+    return spammers
+
+}
+

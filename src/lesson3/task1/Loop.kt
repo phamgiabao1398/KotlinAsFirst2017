@@ -120,11 +120,10 @@ fun gcd(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var i = 2
-    while (n % i != 0) {
-        i++
+    for (i in 2..n / 2) {
+        if (n % i == 0) return i
     }
-    return i
+    return n
 }
 
 
@@ -136,11 +135,10 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var i = n - 1
-    while (n % i != 0) {
-        i--
+    for (i in n / 2 downTo 1) {
+        if (n % i == 0) return i
     }
-    return i
+    return 1
 }
 
 /**
@@ -174,26 +172,18 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var s:Double
-    var a:Double=x
-    var i=1
-    var s1=1.0
-    while ((a>0)&&(a>=2*PI)){
-        a=a-2*PI
+    var sinx = x % (2 * PI)
+    var i = 1
+    val t = sinx
+    var numerator = sinx
+    var denominator = 1.0
+    while (Math.abs(numerator / denominator) > eps) {
+        numerator = numerator * t * t * (-1)
+        denominator = denominator * (i + 1) * (i + 2)
+        sinx += numerator / denominator
+        i = i + 2
     }
-    while ((a<0)&&(a<=-2*PI)){
-        a=a+2*PI
-    }
-    s=a
-    var a1=a
-    if (a==0.0) return 0.0
-    while (abs(s/s1) > abs(eps)){
-        s=s*a1*a1*(-1)
-        s1=s1*(i+1.0)*(i+2.0)
-        a=a+s/s1
-        i=i+2
-    }
-    return a
+    return sinx
 }
 
 /**
@@ -204,24 +194,19 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var s: Double
-    var a  = 1.0
+    var cosx = 1.0
     var i = 0.0
-    var s1 = 1.0
-    var a1: Double
-    if (x>=0) {a1=x} else a1=-x
-    while (a1>=2*PI) {
-        a1=a1-2*PI
+    var denominator = 1.0
+    val t = x % (2 * PI)
+    var numerator = 1.0
+    if (x == 0.0) return 1.0
+    while (abs(numerator / denominator) >= eps) {
+        denominator = denominator * (i + 1.0) * (i + 2.0)
+        numerator = numerator * t * t * (-1.0)
+        cosx = cosx + numerator / denominator
+        i = i + 2.0
     }
-    s=a
-    if (x==0.0) return 1.0
-    while (abs(s/s1) >= abs(eps)) {
-        s1=s1*(i+1.0)*(i+2.0)
-        s=s*a1*a1*(-1.0)
-        a=a+s/s1
-        i=i+2.0
-    }
-    return a
+    return cosx
 }
 
 /**
