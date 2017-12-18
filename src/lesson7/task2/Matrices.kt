@@ -60,35 +60,9 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> {
-    val result = createMatrix(height, width, 0)
-    var cursor = Cell(0, 0)
-    result[cursor] = 1
-    var j = 1
-    for (i in 0..(minOf(height, width) / 2) + 1) {
-        while (cursor.column + 2 <= width && result[Cell(cursor.row, cursor.column + 1)] == 0) {
-            j++
-            cursor = Cell(cursor.row, cursor.column + 1)
-            result[cursor] = j
-        }
-        while (cursor.row + 2 <= height && result[Cell(cursor.row + 1, cursor.column)] == 0) {
-            j++
-            cursor = Cell(cursor.row + 1, cursor.column)
-            result[cursor] = j
-        }
-        while (cursor.column >= 1 && result[Cell(cursor.row, cursor.column - 1)] == 0) {
-            j++
-            cursor = Cell(cursor.row, cursor.column - 1)
-            result[cursor] = j
-        }
-        while (cursor.row >= 1 && result[Cell(cursor.row - 1, cursor.column)] == 0) {
-            j++
-            cursor = Cell(cursor.row - 1, cursor.column)
-            result[cursor] = j
-        }
-    }
-    return result
-}
+fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+
+
 
 
 /**
@@ -105,32 +79,9 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> {
-    val result = createMatrix(height, width, 0)
-    var cursor = Cell(0, 0)
-    result[cursor] = 1
-    var j = 1
-    for (i in 0..(minOf(height, width) / 2) + 1) {
-        while (cursor.column + 2 <= width && result[Cell(cursor.row, cursor.column + 1)] == 0) {
-            cursor = Cell(cursor.row, cursor.column + 1)
-            result[cursor] = j
-        }
-        while (cursor.row + 2 <= height && result[Cell(cursor.row + 1, cursor.column)] == 0) {
-            cursor = Cell(cursor.row + 1, cursor.column)
-            result[cursor] = j
-        }
-        while (cursor.column >= 1 && result[Cell(cursor.row, cursor.column - 1)] == 0) {
-            cursor = Cell(cursor.row, cursor.column - 1)
-            result[cursor] = j
-        }
-        while (cursor.row >= 1 && result[Cell(cursor.row - 1, cursor.column)] == 0) {
-            cursor = Cell(cursor.row - 1, cursor.column)
-            result[cursor] = j
-        }
-        j++
-    }
-    return result
-}
+fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+
+
 
 /**
  * Сложная
@@ -226,18 +177,9 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean {
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
-    val nullMatrix = createMatrix(matrix.height + 2, matrix.width + 2, 0)
-    val result = createMatrix(matrix.height, matrix.width, 0)
-    if (matrix.height * matrix.width == 1)
-        return result
-    for (i in 0..matrix.height - 1)
-        for (j in 0..matrix.width - 1) nullMatrix[i + 1, j + 1] = matrix[i, j]
-    for (i in 1..matrix.height)
-        for (j in 1..matrix.width) result[i - 1, j - 1] = nullMatrix[i + 1, j + 1] + nullMatrix[i + 1, j] + nullMatrix[i, j + 1] +
-                nullMatrix[i - 1, j - 1] + nullMatrix[i - 1, j + 1] + nullMatrix[i + 1, j - 1] + nullMatrix[i - 1, j] + nullMatrix[i, j - 1]
-    return result
-}
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+
+
 
 
 /**
@@ -256,7 +198,6 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
  * 0 0 0 0
  */
 fun findHoles(matrix: Matrix<Int>): Holes {
-    val set = mutableSetOf<Int>()
     val rows = mutableListOf<Int>()
     val colums = mutableListOf<Int>()
     for (i in 0..matrix.height - 1)

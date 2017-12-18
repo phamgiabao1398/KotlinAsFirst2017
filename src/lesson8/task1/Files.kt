@@ -55,12 +55,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val text = File(inputName).readText().toLowerCase()
-    val substrs = mutableMapOf<String, Int>()
+    val substrings1 = mutableMapOf<String, Int>()
     for (substring in substrings) {
         val count = (text.length - text.replace(substring.toLowerCase(), "").length) / substring.length
-        substrs.put(substring, count)
+        substrings1.put(substring, count)
     }
-    return substrs
+    return substrings1
 }
 
 
@@ -80,8 +80,8 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 fun sibilants(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     val writer = File(outputName).bufferedWriter()
-    val soglasnie = listOf('ж', 'Ж', 'ш', 'Ш', 'ч', 'Ч', 'щ', 'Щ')
-    val glasnie = mapOf('ы' to 'и', 'Ы' to 'И', 'ю' to 'у', 'Ю' to 'У', 'я' to 'а', 'Я' to 'А')
+    val soglasnie = listOf('щ', 'Щ','ж', 'Ж', 'ш', 'Ш', 'ч', 'Ч')
+    val glasnie = mapOf('ы' to 'и', 'Я' to 'А','Ы' to 'И', 'ю' to 'у', 'Ю' to 'У', 'я' to 'а')
     for (line in text) {
         val newLine = line.mapIndexed { i, c -> if (i > 0 && glasnie.containsKey(c) && soglasnie.contains(line[i - 1])) glasnie[c]!! else c }
         writer.write(newLine.joinToString(separator = ""))
@@ -108,17 +108,7 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    var maxLength = -1
-    val lines = File(inputName).readLines()
-    for (line in lines) if (line.trim().length > maxLength) maxLength = line.trim().length
-    val outputStream = File(outputName).bufferedWriter()
-    for (i in 0..lines.size - 1) {
-        val lineLength = lines[i].trim().length
-        for (j in 1..(maxLength - lineLength) / 2) outputStream.write(" ")
-        outputStream.write(lines[i].trim())
-        if (i != lines.size - 1) outputStream.newLine()
-    }
-    outputStream.close()
+   TODO()
 }
 
 /**
