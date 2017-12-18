@@ -112,14 +112,7 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
-    if (matrix.height != matrix.width) throw IllegalArgumentException("IllegalArgumentException")
-    val reserveMatrix = createMatrix(matrix.height, matrix.width, matrix[0, 0])
-    for (i in 0..matrix.height - 1)
-        for (j in 0..matrix.height - 1)
-            reserveMatrix[i, j] = matrix[matrix.height - j - 1, i]
-    return reserveMatrix
-}
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
 
 /**
  * Сложная
@@ -275,9 +268,9 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  */
 operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
     val result = this
-    for (i in 0..result.height - 1)
-        for (j in 0..result.width - 1)
-            result[i, j] = -this[i, j]
+    for (i in 0 .. result.height - 1)
+        for (j in 0 .. result.width - 1)
+            result[i, j] = - this[i, j]
     return result
 }
 /**
@@ -289,7 +282,8 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
  * Подробно про порядок умножения см. статью Википедии "Умножение матриц".
  */
 operator fun Matrix<Int>.times(other: Matrix<Int>):  Matrix<Int> {
-    if (this.width != other.height) throw IllegalArgumentException()
+    if (this.width != other.height)
+        throw IllegalArgumentException()
     val result = createMatrix(this.height, other.width, 0)
     for (row in 0..this.height - 1)
         for (column in 0..other.width - 1) {

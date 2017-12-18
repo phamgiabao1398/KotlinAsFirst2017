@@ -83,7 +83,8 @@ fun sibilants(inputName: String, outputName: String) {
     val soglasnie = listOf('щ', 'Щ','ж', 'Ж', 'ш', 'Ш', 'ч', 'Ч')
     val glasnie = mapOf('ы' to 'и', 'Я' to 'А','Ы' to 'И', 'ю' to 'у', 'Ю' to 'У', 'я' to 'а')
     for (line in text) {
-        val newLine = line.mapIndexed { i, c -> if (i > 0 && glasnie.containsKey(c) && soglasnie.contains(line[i - 1])) glasnie[c]!! else c }
+        val newLine = line.mapIndexed { i, c
+            -> if (i > 0 && glasnie.containsKey(c) && soglasnie.contains(line[i - 1])) glasnie[c]!! else c }
         writer.write(newLine.joinToString(separator = ""))
         writer.newLine()
     }
