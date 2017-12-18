@@ -1,7 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson7.task2
 
-import lesson7.task1.Cell
+
 import lesson7.task1.Matrix
 import lesson7.task1.createMatrix
 
@@ -264,30 +264,8 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
-    if (lock.height < key.height || lock.width < key.width)
-        return Triple(false, 0, 0)
-    for (i in 0..lock.height - 1)
-        for (j in 0..lock.width - 1)
-            if (lock[i, j] !in 0..1)
-                return Triple(false, 0, 0)
-    for (i in 0..key.height - 1)
-        for (j in 0..key.width - 1)
-            if (key[i, j] !in 0..1)
-                return Triple(false, 0, 0)
-    for (row in 0..lock.height - key.height)
-        for (column in 0..lock.width - key.width) {
-            var temp = true
-            keyLoop@ for (i in 0..key.height - 1)
-                for (j in 0..key.width - 1) {
-                    temp = key[i, j] != lock[row + i, column + j]
-                    if (!temp) break@keyLoop
-                }
-            if (temp)
-                return Triple(true, row, column)
-        }
-    return Triple(false, 0, 0)
-}
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+
 
 /**
  * Простая
