@@ -53,8 +53,23 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
-
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val result = mutableMapOf<String, Int>()
+    val text = File(inputName).readText().toLowerCase()
+    for (str in substrings) {
+        val str1 = str.toLowerCase()
+        var times = -1
+        var indexOfStr = 0
+        var index = -1
+        while (indexOfStr != -1) {
+            indexOfStr = text.indexOf(str1, index + 1)
+            times++
+            index = indexOfStr
+        }
+        result.put(str, times)
+    }
+    return result
+}
 
 
 /**
@@ -71,7 +86,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+  TODO()
 }
 
 /**
@@ -91,8 +106,25 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
+fun maxLength(inputName: String): Int {
+    var maxLength = -1
+    for (line in File(inputName).readLines())
+        if (line.trim().length > maxLength) maxLength = line.trim().length
+    return maxLength
+}
+
 fun centerFile(inputName: String, outputName: String) {
-   TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val lines = File(inputName).readLines()
+    val maxLength = maxLength(inputName)
+    for (line in lines) {
+        val lineLength = line.trim().length
+        for (i in 1..(maxLength - lineLength) / 2) outputStream.write(" ")
+        outputStream.write(line.trim())
+        if (lines.size != 1 && line != lines.last())
+            outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**
@@ -140,7 +172,14 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val text = File(inputName).readText().toLowerCase()
+    val wordMap = Regex("[a-zа-яё]+").findAll(text).map { it.value }.groupBy { it }.map { it -> it.value.size to it.key }
+    if (wordMap.size >= 20)
+        return wordMap.sortedByDescending { it.first }.subList(0, 20).map { it -> it.second to it.first }.toMap()
+    else
+        return wordMap.sortedByDescending { it.first }.map { it -> it.second to it.first }.toMap()
+}
 
 /**
  * Средняя

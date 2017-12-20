@@ -48,6 +48,7 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
     return result
 }
 
+
 /**
  * Сложная
  *
@@ -195,12 +196,14 @@ fun findHoles(matrix: Matrix<Int>): Holes {
     val colums = mutableListOf<Int>()
     for (i in 0..matrix.height - 1)
         for (j in 0..matrix.width - 1) {
-            if (matrix[i, j] != 0) break
+            if (matrix[i, j] != 0)
+                break
             if (j == matrix.width - 1) rows.add(i)
         }
     for (j in 0..matrix.width - 1)
         for (i in 0..matrix.height - 1) {
-            if (matrix[i, j] != 0) break
+            if (matrix[i, j] != 0)
+                break
             if (i == matrix.height - 1) colums.add(j)
         }
     return Holes(rows, colums)
