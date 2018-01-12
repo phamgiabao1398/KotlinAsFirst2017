@@ -255,71 +255,7 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int {
-    var count = roman.length-1
-    var num: Int = 0
-    while (count >= 0) {
-        when (roman[count]) {
-            'I' -> {num++ ; count--}
-            'V' -> {
-                if (count != 0 && roman[count-1] == 'I') {
-                    num += 4
-                    count -= 2
-                } else {
-                    num += 5
-                    count--
-                }
-            }
-            'X' -> {
-                if (count != 0 && roman[count-1] == 'I') {
-                    num += 9
-                    count -= 2
-                } else {
-                    num += 10
-                    count--
-                }
-            }
-            'L' -> {
-                if (count != 0 && roman[count-1] == 'X') {
-                    num += 40
-                    count -= 2
-                } else {
-                    num += 50
-                    count--
-                }
-            }
-            'C' -> {
-                if (count != 0 && roman[count-1] == 'X') {
-                    num += 90
-                    count -= 2
-                } else {
-                    num += 100
-                    count--
-                }
-            }
-            'D' -> {
-                if (count != 0 && roman[count-1] == 'C') {
-                    num += 400
-                    count -= 2
-                } else {
-                    num += 500
-                    count--
-                }
-            }
-            'M' -> {
-                if (count != 0 && roman[count-1] == 'C') {
-                    num += 900
-                    count -= 2
-                } else {
-                    num += 1000
-                    count--
-                }
-            }
-            else -> {count = -1; num = -1}
-        }
-    }
-    return num
-}
+fun fromRoman(roman: String): Int = TODO()
 /**
  * Очень сложная
  *
