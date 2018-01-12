@@ -258,26 +258,30 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  */
 fun minContainingCircle(vararg points: Point): Circle {
-    var result = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
-    if (points.size == 2) {
-        val radius = points[0].distance(points[1]) / 2
-        val center = Point((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2)
-        return Circle(center, radius)
+    val resultPoints = diameter(*points)
+    var result = circleByDiameter(resultPoints)
+    var flag = true
+    var ind = 0
+    when (points.size) {
+        1 -> return Circle(points[0], 0.0)
+        0 -> throw IllegalArgumentException()
     }
-    val circl = circleByDiameter(diameter(*points))
-    if (points.all { circl.contains(it) }) return circl
-    for (a in points) {
-        val allWithOutA = points.filter { it != a }
-        for (b in allWithOutA) {
-            val allWithOutAandB = points.filter { it != a && it != b }
-            for (c in allWithOutAandB) {
-                if (circleByThreePoints(a, b, c).radius < result.radius &&
-                        points.all { circleByThreePoints(a, b, c).contains(it) })
-                    result = circleByThreePoints(a, b, c)
+    while (flag && ind < points.size) {
+        flag = result.contains(points[ind])
+        ind++
+    }
+    if (!flag) {
+        var farthestPoint = points[0]
+        var maxDistance = farthestPoint.distance(result.center)
+        for (i in 1 until points.size) {
+            val currentDistance = points[i].distance(result.center)
+            if (currentDistance > maxDistance) {
+                maxDistance = currentDistance
+                farthestPoint = points[i]
             }
         }
+
+        result = circleByThreePoints(resultPoints.begin, resultPoints.end, farthestPoint)
     }
-    if (points.size == 1) return Circle(points[0], 0.0)
-    if (points.isEmpty()) throw IllegalArgumentException()
     return result
 }

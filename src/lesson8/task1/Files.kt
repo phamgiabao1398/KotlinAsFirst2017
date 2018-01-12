@@ -3,6 +3,7 @@ package lesson8.task1
 
 import lesson3.task1.digitNumber
 import java.io.File
+import java.lang.Integer.max
 
 /**
  * Пример
@@ -159,56 +160,55 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
+fun maxLengthLine(lines: List<String>): Int {
+    var maxLength = 0
+    for (line in lines)
+        maxLength = max(maxLength, line.length)
+    return maxLength
+}
+
+
 fun alignFileByWidth(inputName: String, outputName: String) {
-
-    var outputWriter = File(outputName).bufferedWriter()
-
-    var length = -1
-
-    for (line in File(inputName).readLines()) {
-        if (line.trim().length > length) length = line.trim().length
-    }
-
-    for (line in File(inputName).readLines()) {
-
-        var mutableLine = line.trim()
-
-        if (mutableLine.isBlank()) {
-            outputWriter.newLine()
-
+    val outputStream = File(outputName).bufferedWriter()
+    var resultList = mutableListOf<String>()
+    File(inputName).readLines().forEach { resultList.add(it.trim()) }
+    val maxLength = maxLengthLine(resultList)
+    for (line in resultList) {
+        if (line.isEmpty()) {
+            outputStream.newLine()
         } else {
-            var searchStringPartIndex = 0
-
-            var currentNumberOfSpaces = 2
-
-            if (mutableLine.contains(" "))
-                while (mutableLine.length < length) {
-
-                    var leftPart = mutableLine.substring(0, searchStringPartIndex)
-                    var rightPart = mutableLine.substring(searchStringPartIndex)
-
-                    if (rightPart.indexOf(" ") == -1) {
-
-                        currentNumberOfSpaces++
-                        searchStringPartIndex = 0
-                        continue
+            var ansLine = StringBuilder(line)
+            var parts = line.split(' ')
+            if (parts.size > 1) {
+                var ind = 0
+                var count = 0
+                var i = 0
+                while (i < parts.size) {
+                    if (parts[i] == "") {
+                        ansLine.deleteCharAt(ind)
+                        parts -= parts[i]
+                    } else {
+                        ind += parts[i].length + 1
+                        i++
                     }
-
-                    searchStringPartIndex = rightPart.indexOf(" ") + leftPart.length + currentNumberOfSpaces
-
-                    rightPart = rightPart.replaceFirst(" ", "  ")
-
-                    mutableLine = leftPart + rightPart
-
                 }
-
-            outputWriter.write(mutableLine)
-            outputWriter.newLine()
+                val length = ansLine.length
+                for (i in 0 until maxLength - length) {
+                    if (i % (parts.size - 1) == 0) {
+                        count++
+                        ind = 0
+                    }
+                    val part = parts[i % (parts.size - 1)]
+                    ind += part.length
+                    ansLine.insert(ind, ' ')
+                    ind += count + 1
+                }
+            }
+            outputStream.write(ansLine.toString())
+            outputStream.newLine()
         }
     }
-
-    outputWriter.close()
-
+    outputStream.close()
 }
 
 /**
