@@ -1,8 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson6.task2
 
-import java.lang.Math.abs
-import java.lang.Math.max
+
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -70,7 +69,12 @@ fun square(notation: String): Square {
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+fun rookMoveNumber(start: Square, end: Square): Int = when{
+    !start.inside() || !end.inside() -> throw IllegalArgumentException()
+    start == end -> 0
+    start.column == end.column || start.row == end.row -> 1
+    else -> 2
+}
 
 /**
  * Средняя
@@ -239,7 +243,36 @@ fun kingTrajectory(start: Square, end: Square)
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun step(square: Square, set: Set<Square>): List<Square> {
+    val result = listOf(Square(square.column + 2, square.row - 1), Square(square.column + 2, square.row + 1),
+            Square(square.column - 2, square.row + 1), Square(square.column - 2, square.row - 1), Square(square.column - 1, square.row - 2),
+            Square(square.column - 1, square.row + 2), Square(square.column + 1, square.row - 2), Square(square.column + 1, square.row + 2))
+    return result.filter { it.inside() }.filter { it !in set }
+}
+
+
+fun knightMoveNumber(start: Square, end: Square): Int {
+    val set = mutableSetOf<Square>()
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    if (start == end) return 0
+    var list = mutableListOf(start)
+    var result = 0
+    var temp = list
+    while (end !in list) {
+        temp = list
+        list = mutableListOf<Square>()
+        loop@ for (element in temp) {
+            val steps = step(element, set)
+            for (step in steps) {
+                list.add(step)
+                set.add(step)
+                if (step == end) break@loop
+            }
+        }
+        result++
+    }
+    return result
+}
 
 /**
  * Очень сложная
@@ -262,4 +295,52 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+ fun knightTrajectory(start: Square, end: Square): List<Square> {
+    val set = mutableSetOf<Square>()
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    if (start == end) return listOf(start)
+    var list = mutableListOf(start)
+    val listResult = mutableListOf(mutableListOf(start))
+    var temp = list
+    main@ while (end !in list) {
+        temp = list
+        list = mutableListOf<Square>()
+        listResult.add(mutableListOf())
+        for (element in temp) {
+            val steps = step(element, set)
+            for (step in steps) {
+                list.add(step)
+                set.add(step)
+                listResult[listResult.size - 1].add(step)
+                if (end == step) break@main
+            }
+        }
+    }
+    val setEnd = mutableSetOf(end)
+    val tempList = mutableListOf(end)
+    list = mutableListOf(end)
+    var i = 2
+    var k = false
+    main@ while (start !in list) {
+        k = false
+        temp = list
+        list = mutableListOf<Square>()
+        loop@ for (element in temp) {
+            val steps = step(element, setEnd)
+            for (step in steps) {
+                list.add(step)
+                setEnd.add(step)
+                if (step in listResult[listResult.size - i]) {
+                    i++
+                    tempList.add(step)
+                    list = mutableListOf(step)
+                    if (step == start) break@main
+                    break@loop
+                }
+            }
+        }
+    }
+    val result = mutableListOf<Square>()
+    for (j in 1..tempList.size) result.add(tempList[tempList.size - j])
+    return result
+}

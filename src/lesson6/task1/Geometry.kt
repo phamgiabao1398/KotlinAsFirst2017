@@ -2,6 +2,7 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.*
 
 /**
  * Точка на плоскости
@@ -88,8 +89,13 @@ data class Circle(val center: Point, val radius: Double) {
 /**
  * Отрезок между двумя точками
  */
-data class Segment(val begin: Point, val end: Point)
+data class Segment(val begin: Point, val end: Point) {
+    override fun equals(other: Any?) =
+            other is Segment && (begin == other.begin && end == other.end || end == other.begin && begin == other.end)
 
+    override fun hashCode() =
+            begin.hashCode() + end.hashCode()
+}
 /**
  * Средняя
  *
@@ -146,7 +152,13 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        val x = (b * cos(other.angle) - other.b * cos(angle)) / sin(other.angle - angle)
+        val y = if (abs(PI / 2 - angle) > abs(PI / 2 - other.angle))
+            (x * sin(this.angle) + this.b) / cos(this.angle)
+        else (x * sin(other.angle) + other.b) / cos(other.angle)
+        return Point(x, y)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -173,7 +185,7 @@ fun lineBySegment(s: Segment): Line = Line(s.begin, Math.atan((s.end.y - s.begin
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = Line(a, Math.atan((a.y - b.y) / (a.x - b.x)))
+fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 
 
 /**
@@ -181,10 +193,7 @@ fun lineByPoints(a: Point, b: Point): Line = Line(a, Math.atan((a.y - b.y) / (a.
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line {
-    val point = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
-    return Line(point, (lineByPoints(a, b).angle + Math.PI / 2) % Math.PI)
-}
+fun bisectorByPoints(a: Point, b: Point): Line = Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), (Math.PI / 2 + lineByPoints(a, b).angle) % Math.PI)
 
 /**
  * Средняя
@@ -217,12 +226,16 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val bis1 = bisectorByPoints(a, b)
-    val bis2 = bisectorByPoints(b, c)
-    val center = bis1.crossPoint(bis2)
-    val radius = center.distance(a)
-    return Circle(center, radius)
+    val xofcenter = -1 * ((a.y - b.y) * ((c.x * c.x) + (c.y * c.y)) + (b.y - c.y) * ((a.x * a.x) + (a.y * a.y)) + (c.y -
+            a.y) * ((b.y * b.y) + (b.x * b.x))) / (2 * ((a.x - b.x) * (c.y - a.y) - (a.y - b.y) * (c.x - a.x)))
+    val yofcenter = ((a.x - b.x) * ((c.x * c.x) + (c.y * c.y)) + (b.x - c.x) * ((a.x * a.x) + (a.y * a.y)) + (c.x - a.x)
+            * ((b.y * b.y) + (b.x * b.x))) / (2 * ((a.x - b.x) * (c.y - a.y) - (a.y - b.y) * (c.x - a.x)))
+    val centerof = Point(xofcenter, yofcenter)
+    val radiusof = sqrt(sqr(xofcenter - a.x) + sqr(yofcenter - a.y))
+    val circle = Circle(centerof, radiusof)
+    return circle
 }
+
 
 /**
  * Очень сложная
@@ -235,5 +248,13 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
-
+fun minContainingCircle(vararg points: Point): Circle {
+    val a = diameter(*points)
+    var b = circleByDiameter(a)
+    for (c in points) {
+        if (!b.contains(c)) {
+            b = circleByThreePoints(a.begin, a.end, c)
+        }
+    }
+    return b
+}

@@ -180,8 +180,25 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
-
+fun plusMinus(expression: String): Int {
+    try {
+        val myList = expression.split(" ")
+        var sum = myList[0].toInt()
+        for (i in 0..myList.size - 1) {
+            if (myList[i] == "+") {
+                val a = myList[i + 1].toInt()
+                sum += a
+            }
+            if (myList[i] == "-") {
+                val a = myList[i + 1].toInt()
+                sum -= a
+            }
+        }
+        return sum
+    } catch (e: NumberFormatException) {
+        throw IllegalArgumentException()
+    }
+}
 /**
  * Сложная
  *
@@ -191,8 +208,8 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
-/**
+fun firstDuplicateIndex(str: String): Int =
+        Regex("""([а-яa-z]+) (\1)\b""", RegexOption.IGNORE_CASE).find(str)?.range?.first ?: -1/**
  * Сложная
  *
  * Строка содержит названия товаров и цены на них в формате вида
@@ -203,8 +220,24 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
-
+fun mostExpensive(description: String): String {
+    try {
+        var maxPrice = 0.0
+        var myIndex = 0
+        val listStr = description.filter { it != ';' }
+        val secList = listStr.split(" ")
+        for (i in 1..secList.size - 1 step 2) {
+            if (secList[i].toDouble() < 0) return ""
+            if (secList[i].toDouble() >= maxPrice) {
+                maxPrice = secList[i].toDouble()
+                myIndex = i
+            }
+        }
+        return secList[myIndex - 1]
+    } catch (e: Exception) {
+        return ""
+    }
+}
 /**
  * Сложная
  *
@@ -216,8 +249,43 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+val table: Map<Char, Int> =
+        mapOf(  'M' to 1000,
+                'D' to 500,
+                'C' to 100,
+                'L' to 50,
+                'X' to 10,
+                'V' to 5,
+                'I' to 1)
 
+fun fromRoman(roman: String): Int {
+    val checkFormat1 = Regex("""IIII|XXXX|CCCC|VV|LL|DD""")
+    val checkFormat2 = Regex("""II(?=(V|X))|XX(?=(L|C))|CC(?=(D|M))""")
+    val checkFormat3 = Regex("""V(?=(L|IV|IX))|L(?=(D|XL|XC))|D(?=(CD|CM))""")
+    val checkFormat4 = Regex("""(IV|IX)(?=(I|V|X|L|C|D|M))|(XL|XC)(?=(X|L|C|D|M))|(CD|CM)(?=(C|D|M))""")
+
+    if (    checkFormat1.containsMatchIn(roman) ||
+            checkFormat2.containsMatchIn(roman) ||
+            checkFormat3.containsMatchIn(roman) ||
+            checkFormat4.containsMatchIn(roman)) return -1
+    else if (roman == "") return 0
+    else {
+        var result: Int = 0
+        var parts = roman.toList()
+        while (parts.size > 1) {
+            val current: Int = table[parts[0]] ?: return -1
+            val next: Int = table[parts[1]] ?: return -1
+            when {
+                next / current <= 1                             -> result += current
+                next / current == 5 || next / current == 10     -> result -= current
+                else                                            -> return -1
+            }
+            parts = parts.drop(1)
+        }
+        result += table[parts[0]] ?: return -1
+        return result
+    }
+}
 /**
  * Очень сложная
  *

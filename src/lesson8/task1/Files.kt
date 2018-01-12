@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson8.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
 
 /**
@@ -86,9 +87,13 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-  TODO()
-}
+    val text = File(inputName).readText()
+    val chars = mapOf("ы" to "и", "Ы" to "И", "ю" to "у", "Ю" to "У", "я" to "а", "Я" to "А")
+    val writer = File(outputName).bufferedWriter()
+    writer.write(text.replace(Regex("(?<=[жЖшШчЧщЩ])([ыЫюЮяЯ])"), {R -> chars[R.groupValues[1]] ?: R.groupValues[1]} ))
+    writer.close()
 
+}
 /**
  * Средняя
  *
@@ -155,7 +160,32 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).readLines().map { it.trim() }
+    val maxStr = lines.map { it.length }.max() ?: 0
+    val writer = File(outputName).writer()
+    val str = StringBuilder()
+    for (line in lines) {
+        if (line.isNotEmpty()) {
+            val spaces = maxStr - line.length
+            val words = line.split(" ")
+            if (words.size > 1) {
+                var extraSpaces = spaces % (words.size - 1)
+                val spacesPerWord = spaces / (words.size - 1)
+                for (i in 0..words.size - 2) {
+                    str.append(words[i])
+                    (0..spacesPerWord).forEach { str.append(" ") }
+                    if (extraSpaces > 0) {
+                        str.append(" ")
+                        extraSpaces--
+                    }
+                }
+            }
+            str.append(words.last())
+        }
+        str.appendln()
+    }
+    writer.write(str.toString())
+    writer.close()
 }
 
 /**
@@ -236,7 +266,42 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-  TODO()
+    if (File(inputName).exists()) {
+        val input = File(inputName).bufferedReader()
+        val temp = mutableListOf<String>()
+        for (line in input.readLines()) {
+            var hasDifferentSymbols = true
+            for (i in 1..line.length-1) {
+                if (line.take(i).contains(Regex("${line[i]}",RegexOption.IGNORE_CASE))) {
+                    hasDifferentSymbols = false
+                    break
+                }
+            }
+            if (hasDifferentSymbols) {
+                temp.add(line)
+            }
+        }
+        input.close()
+
+        val output = File(outputName).bufferedWriter()
+        var maxLength = 0
+        var isFirstWord = true
+
+        for (i in temp) {
+            if (i.length > maxLength) maxLength = i.length
+        }
+
+        for (i in temp) {
+            if (i.length == maxLength) {
+                if (isFirstWord) {
+                    isFirstWord = false
+                    output.append(i)
+                }
+                else output.append(", $i")
+            }
+        }
+        output.close()
+    }
 }
 
 /**
@@ -426,9 +491,45 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 
-fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+fun printWithSpace(count:Int, n:Int) : String{
+    val builder = StringBuilder()
+    for(i in 1..count)
+        builder.append(" ")
+    builder.append(n.toString())
+    return builder.toString()
+}
 
+fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
+    val writer = File(outputName).bufferedWriter()
+    val sp = if (lhv * rhv > 0) digitNumber(lhv * rhv) else digitNumber(lhv * rhv) +1
+    var myRhv = rhv
+    var ch = lhv * (myRhv % 10)
+    var n = 0
+    writer.write(printWithSpace(sp - digitNumber(lhv) + 1, lhv))
+    writer.newLine()
+    writer.write("*")
+    writer.write(printWithSpace(sp - digitNumber(rhv), rhv))
+    writer.newLine()
+    for(i in 0..sp)
+        writer.write("-")
+    writer.newLine()
+    writer.write(printWithSpace(sp - digitNumber(ch) + 1, ch))
+    myRhv/= 10
+    while (myRhv > 0){
+        n++
+        ch = lhv * (myRhv % 10)
+        writer.newLine()
+        writer.write("+")
+        writer.write(printWithSpace(sp - digitNumber(ch) - n, ch))
+        myRhv/= 10
+    }
+    writer.newLine()
+    for(i in 0..sp)
+        writer.write("-")
+    writer.newLine()
+    writer.write(" ")
+    writer.write((lhv * rhv).toString())
+    writer.close()
 }
 
 
