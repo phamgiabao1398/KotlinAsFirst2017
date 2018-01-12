@@ -160,32 +160,55 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val lines = File(inputName).readLines().map { it.trim() }
-    val maxStr = lines.map { it.length }.max() ?: 0
-    val writer = File(outputName).writer()
-    val str = StringBuilder()
-    for (line in lines) {
-        if (line.isNotEmpty()) {
-            val spaces = maxStr - line.length
-            val words = line.split(" ")
-            if (words.size > 1) {
-                var extraSpaces = spaces % (words.size - 1)
-                val spacesPerWord = spaces / (words.size - 1)
-                for (i in 0..words.size - 2) {
-                    str.append(words[i])
-                    (0..spacesPerWord).forEach { str.append(" ") }
-                    if (extraSpaces > 0) {
-                        str.append(" ")
-                        extraSpaces--
-                    }
-                }
-            }
-            str.append(words.last())
-        }
-        str.appendln()
+
+    var outputWriter = File(outputName).bufferedWriter()
+
+    var length = -1
+
+    for (line in File(inputName).readLines()) {
+        if (line.trim().length > length) length = line.trim().length
     }
-    writer.write(str.toString())
-    writer.close()
+
+    for (line in File(inputName).readLines()) {
+
+        var mutableLine = line.trim()
+
+        if (mutableLine.isBlank()) {
+            outputWriter.newLine()
+
+        } else {
+            var searchStringPartIndex = 0
+
+            var currentNumberOfSpaces = 2
+
+            if (mutableLine.contains(" "))
+                while (mutableLine.length < length) {
+
+                    var leftPart = mutableLine.substring(0, searchStringPartIndex)
+                    var rightPart = mutableLine.substring(searchStringPartIndex)
+
+                    if (rightPart.indexOf(" ") == -1) {
+
+                        currentNumberOfSpaces++
+                        searchStringPartIndex = 0
+                        continue
+                    }
+
+                    searchStringPartIndex = rightPart.indexOf(" ") + leftPart.length + currentNumberOfSpaces
+
+                    rightPart = rightPart.replaceFirst(" ", "  ")
+
+                    mutableLine = leftPart + rightPart
+
+                }
+
+            outputWriter.write(mutableLine)
+            outputWriter.newLine()
+        }
+    }
+
+    outputWriter.close()
+
 }
 
 /**

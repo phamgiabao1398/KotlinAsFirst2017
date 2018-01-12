@@ -208,8 +208,14 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int =
-        Regex("""([а-яa-z]+) (\1)\b""", RegexOption.IGNORE_CASE).find(str)?.range?.first ?: -1/**
+fun firstDuplicateIndex(str: String): Int {
+    val low = str.toLowerCase()
+    val duplicated = Regex("""(?<!\S)(\S+)\s\1(?!\S)""").find(low)?.value
+    if (duplicated != null) {
+        return low.indexOf(duplicated)
+    } else return -1
+}
+/**
  * Сложная
  *
  * Строка содержит названия товаров и цены на них в формате вида
@@ -249,42 +255,70 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-val table: Map<Char, Int> =
-        mapOf(  'M' to 1000,
-                'D' to 500,
-                'C' to 100,
-                'L' to 50,
-                'X' to 10,
-                'V' to 5,
-                'I' to 1)
-
 fun fromRoman(roman: String): Int {
-    val checkFormat1 = Regex("""IIII|XXXX|CCCC|VV|LL|DD""")
-    val checkFormat2 = Regex("""II(?=(V|X))|XX(?=(L|C))|CC(?=(D|M))""")
-    val checkFormat3 = Regex("""V(?=(L|IV|IX))|L(?=(D|XL|XC))|D(?=(CD|CM))""")
-    val checkFormat4 = Regex("""(IV|IX)(?=(I|V|X|L|C|D|M))|(XL|XC)(?=(X|L|C|D|M))|(CD|CM)(?=(C|D|M))""")
-
-    if (    checkFormat1.containsMatchIn(roman) ||
-            checkFormat2.containsMatchIn(roman) ||
-            checkFormat3.containsMatchIn(roman) ||
-            checkFormat4.containsMatchIn(roman)) return -1
-    else if (roman == "") return 0
-    else {
-        var result: Int = 0
-        var parts = roman.toList()
-        while (parts.size > 1) {
-            val current: Int = table[parts[0]] ?: return -1
-            val next: Int = table[parts[1]] ?: return -1
-            when {
-                next / current <= 1                             -> result += current
-                next / current == 5 || next / current == 10     -> result -= current
-                else                                            -> return -1
+    var count = roman.length-1
+    var num: Int = 0
+    while (count >= 0) {
+        when (roman[count]) {
+            'I' -> {num++ ; count--}
+            'V' -> {
+                if (count != 0 && roman[count-1] == 'I') {
+                    num += 4
+                    count -= 2
+                } else {
+                    num += 5
+                    count--
+                }
             }
-            parts = parts.drop(1)
+            'X' -> {
+                if (count != 0 && roman[count-1] == 'I') {
+                    num += 9
+                    count -= 2
+                } else {
+                    num += 10
+                    count--
+                }
+            }
+            'L' -> {
+                if (count != 0 && roman[count-1] == 'X') {
+                    num += 40
+                    count -= 2
+                } else {
+                    num += 50
+                    count--
+                }
+            }
+            'C' -> {
+                if (count != 0 && roman[count-1] == 'X') {
+                    num += 90
+                    count -= 2
+                } else {
+                    num += 100
+                    count--
+                }
+            }
+            'D' -> {
+                if (count != 0 && roman[count-1] == 'C') {
+                    num += 400
+                    count -= 2
+                } else {
+                    num += 500
+                    count--
+                }
+            }
+            'M' -> {
+                if (count != 0 && roman[count-1] == 'C') {
+                    num += 900
+                    count -= 2
+                } else {
+                    num += 1000
+                    count--
+                }
+            }
+            else -> {count = -1; num = -1}
         }
-        result += table[parts[0]] ?: return -1
-        return result
     }
+    return num
 }
 /**
  * Очень сложная

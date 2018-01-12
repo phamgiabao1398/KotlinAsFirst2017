@@ -193,7 +193,16 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), (Math.PI / 2 + lineByPoints(a, b).angle) % Math.PI)
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val biX = (a.x + b.x) / 2
+    val biY = (a.y + b.y) / 2
+    if (a.x == b.x)
+        return Line(Point(biX, biY), 0.0)
+    var al = lineByPoints(a, b).angle + PI / 2
+    if (al > PI) al -= PI
+    return Line(Point(biX, biY), al)
+}
+
 
 /**
  * Средняя
@@ -249,12 +258,26 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  */
 fun minContainingCircle(vararg points: Point): Circle {
-    val a = diameter(*points)
-    var b = circleByDiameter(a)
-    for (c in points) {
-        if (!b.contains(c)) {
-            b = circleByThreePoints(a.begin, a.end, c)
+    var result = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
+    if (points.size == 2) {
+        val radius = points[0].distance(points[1]) / 2
+        val center = Point((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2)
+        return Circle(center, radius)
+    }
+    val circl = circleByDiameter(diameter(*points))
+    if (points.all { circl.contains(it) }) return circl
+    for (a in points) {
+        val allWithOutA = points.filter { it != a }
+        for (b in allWithOutA) {
+            val allWithOutAandB = points.filter { it != a && it != b }
+            for (c in allWithOutAandB) {
+                if (circleByThreePoints(a, b, c).radius < result.radius &&
+                        points.all { circleByThreePoints(a, b, c).contains(it) })
+                    result = circleByThreePoints(a, b, c)
+            }
         }
     }
-    return b
+    if (points.size == 1) return Circle(points[0], 0.0)
+    if (points.isEmpty()) throw IllegalArgumentException()
+    return result
 }
