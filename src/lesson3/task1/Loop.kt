@@ -184,7 +184,6 @@ fun sin(x: Double, eps: Double): Double {
     }
     s=a
     var a1=a
-    if (a==0.0) return 0.0
     while (abs(s/s1) > abs(eps)){
         s=s*a1*a1*(-1)
         s1=s1*(i+1.0)*(i+2.0)

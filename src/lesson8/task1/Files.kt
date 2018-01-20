@@ -261,24 +261,7 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    val fi = File(inputName).readText().toMutableList()
-    val list0 = mutableListOf<String>()
-    for (i in 0..fi.size - 1) {
-        list0.add(fi[i].toString())
-    }
-    val list = dictionary.toList()
-    for (i in 0..list0.size - 1) {
-        for (j in 0..list.size - 1) {
-            val k = list0[i].compareTo(list[j].first.toString(), ignoreCase = true)
-            if (k == 0) list0[i] = list[j].second
-        }
-    }
-    val str1 = list0.joinToString("").toMutableList()
-    str1[0] = str1[0].toUpperCase()
-    val str2 = str1.joinToString("")
-    val file1 = File(outputName).bufferedWriter()
-    file1.write(str2)
-    file1.close()
+   TODO()
 }
 
 /**
@@ -389,9 +372,41 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  */
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-   TODO()
+    val keys = listOf(Triple("**", "<b>", "</b>"), Triple("*", "<i>", "</i>"),Triple("~~", "<s>", "</s>"))
+    val outputStream = File(outputName).bufferedWriter()
+    outputStream.write("<html>")
+    outputStream.write("<body>")
+    outputStream.write("<p>")
+    var file = File(inputName).readText().split("\r\n", "\n").joinToString(separator = "\n")
+            .split("\n\n")
+            .joinToString(separator = "</p><p>")
+    for (key in keys) {
+        val temp = file.split(key.first).toMutableList()
+        if (temp.size == 1) continue
+        if (temp.size % 2 == 0) {
+            temp[temp.size - 2] += key.first + temp[temp.size - 1]
+            temp.removeAt(temp.size - 1)
+        }
+        val sb = StringBuilder()
+        var k = true
+        for (i in 0..temp.size - 2) {
+            if (k) {
+                sb.append((listOf(temp[i], temp[i + 1])).joinToString(separator = key.second))
+                k = false
+            } else {
+                sb.append(key.third)
+                k = true
+            }
+        }
+        sb.append(temp[temp.size - 1])
+        file = sb.toString()
+    }
+    outputStream.write(file)
+    outputStream.write("</p>")
+    outputStream.write("</body>")
+    outputStream.write("</html>")
+    outputStream.close()
 }
-
 
 /**
  * Сложная
